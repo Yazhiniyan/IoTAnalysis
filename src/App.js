@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
+import './App.css';
 
 const ActivityLog = () => {
   const [activityData, setActivityData] = useState([]);
   const [turnOnCount, setTurnOnCount] = useState(0);
   const [turnOffCount, setTurnOffCount] = useState(0);
+  const [hours, setHours] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,6 +21,22 @@ const ActivityLog = () => {
         });
         const data = await response.json();
         setActivityData(data.activitylogs);
+
+        let totalHoursTurnedOn = 0;
+        const reversed = data.activitylogs.reverse();
+        reversed.forEach((activity, index) => {
+          if (activity.message.includes('turned on')) {
+            const nextTurnedOffIndex = reversed.findIndex((a, i) => i > index && a.message.includes('turned off'));
+            if (nextTurnedOffIndex !== -1) {
+              const turnedOnTime = new Date(activity.createdAt);
+              const turnedOffTime = new Date(reversed[nextTurnedOffIndex].createdAt);
+              const durationMilliseconds = turnedOffTime - turnedOnTime;
+              const durationHours = durationMilliseconds / (1000 * 60 * 60);
+              totalHoursTurnedOn += durationHours;
+            }
+          }
+        });
+        setHours(totalHoursTurnedOn.toFixed(2));
       } catch (error) {
         console.error('Error fetching activity data:', error);
       }
@@ -39,39 +59,44 @@ const ActivityLog = () => {
     setTurnOffCount(offCount);
   }, [activityData]);
 
+  const data = {
+    labels: ['Turned On Time', 'Remaining Time'],
+    datasets: [
+      {
+        data: [hours, 24 - hours],
+        backgroundColor: ['#4CAF50', '#FF6347'],
+        hoverBackgroundColor: ['#66BB6A', '#FF7F50'],
+      },
+    ],
+  };
+
   return (
     <div>
+      <div>
+        <p>Turned On Count: {turnOnCount}</p>
+        <p>Turned Off Count: {turnOffCount}</p>
+        <p>Total no of hours : {hours} hrs</p>
+      </div>
       <h2>Activity Log</h2>
       <table>
         <thead>
           <tr>
-            <th>IP Address</th>
-            <th>Location</th>
-            <th>Client ID</th>
+            <th>No.</th>
             <th>Message</th>
-            <th>Device</th>
             <th>Created At</th>
-            <th>Updated At</th>
           </tr>
         </thead>
         <tbody>
-          {activityData.map(activity => (
+          {activityData.map((activity, index) => (
             <tr key={activity.id}>
-              <td>{activity.ipAddress}</td>
-              <td>{activity.location}</td>
-              <td>{activity.clientId}</td>
+              <td>{index + 1}</td>
               <td>{activity.message}</td>
-              <td>{activity.device}</td>
-              <td>{activity.createdAt}</td>
-              <td>{activity.updatedAt}</td>
+              <td>{new Date(activity.createdAt).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div>
-        <p>Turned On Count: {turnOnCount}</p>
-        <p>Turned Off Count: {turnOffCount}</p>
-      </div>
+    
     </div>
   );
 };
