@@ -1,49 +1,78 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
-  margin: 0;
+/* App.css */
+
+.activity-log-container {
+  margin: auto;
+  width: 90%;
+  max-width: 1200px;
+}
+
+.chart-item {
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.chart-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart-info {
+  margin-left: 20px;
+}
+
+.chart-info p {
+  margin: 5px 0;
+}
+
+.overview-widget {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   padding: 20px;
+  margin-top: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.overview-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.overview-info p {
+  margin: 5px 0;
+}
+
+h1, h2 {
+  color: #333;
+  text-align: center;
 }
 
 h2 {
-  text-align: center;
-  color: #333;
+  margin-top: 50px;
 }
 
 table {
   width: 100%;
-  margin: 20px 0;
   border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
 }
 
 th, td {
-  padding: 12px 15px;
+  padding: 10px;
   border: 1px solid #ddd;
-  text-align: left;
 }
 
 th {
-  background-color: #4CAF50;
-  color: #fff;
-}
-
-tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-tr:hover {
-  background-color: #f1f1f1;
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
-.chart-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.chart {
-  width: 400px;
-  height: 400px;
+tbody tr:hover {
+  background-color: #f0f0f0;
 }
